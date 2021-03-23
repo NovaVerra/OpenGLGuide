@@ -1,4 +1,4 @@
-#include "project_name/header.h"
+#include "../includes/wireframe_renderer/header.h"
 
 int	main()
 {

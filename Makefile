@@ -1,5 +1,5 @@
 # NAME OF EXECUTABLE
-NAME = wireframe
+NAME = opengl
 
 # COMPILER
 CC = g++
@@ -24,8 +24,8 @@ GLEW_LINK = -L $(GLFW_DIR)/lib/ -lGLEW
 HEADER = -I $(INC_DIR) -I $(GLFW_INC) -I $(GLEW_INC)
 
 # SRCS & OBJS
-SRCS = main.cpp \
-		class.cpp
+SRCS = main.cpp
+
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 
 # INSTRUCTIONS

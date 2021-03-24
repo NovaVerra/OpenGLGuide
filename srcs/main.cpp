@@ -106,7 +106,7 @@ int	main()
 		}
 	)glsl";
 
-	unsigned int	shader = CreateShader(vertexShader, fragmentShader);
+	unsigned int	shader {CreateShader(vertexShader, fragmentShader)};
 	glUseProgram(shader);
 
 	/* Loop until the user closes the window */

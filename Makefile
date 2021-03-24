@@ -15,8 +15,13 @@ GLFW_DIR = $(shell brew --prefix glfw)
 GLFW_INC = $(GLFW_DIR)/include/
 GLFW_LINK = -L $(GLFW_DIR)/lib/ -lglfw -framework OpenGL
 
+# GLEW
+GLEW_DIR = $(shell brew --prefix glew)
+GLEW_INC = $(GLFW_DIR)/include/
+GLEW_LINK = -L $(GLFW_DIR)/lib/ -lGLEW
+
 # HEADER (includes all INC)
-HEADER = -I $(INC_DIR) -I $(GLFW_INC)
+HEADER = -I $(INC_DIR) -I $(GLFW_INC) -I $(GLEW_INC)
 
 # SRCS & OBJS
 SRCS = main.cpp \
@@ -35,7 +40,7 @@ $(OBJ_DIR)%.o:$(SRC_DIR)%.cpp
 
 # .o to ./wireframe
 $(NAME):$(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(GLFW_LINK) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(GLFW_LINK) $(GLEW_LINK) $(OBJS)
 
 clean:
 	rm -rf $(OBJ_DIR)

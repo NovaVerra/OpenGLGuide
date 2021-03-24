@@ -1,6 +1,39 @@
 #include "../includes/opengl_guide/header.h"
 
-static unsigned int		CompileShader(unsigned int type, const std::string &source)
+ShaderSource			retrieveShader(const std::string &file_path)
+{
+	std::ifstream		shaders {file_path};
+	std::ostringstream	oss[2];
+	std::string			line {};
+
+	if (!shaders)
+		std::cerr << "Error opening file" << std::endl;
+
+	enum class ShaderType
+	{
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+
+	ShaderType type = ShaderType::NONE;
+
+	while (std::getline(shaders, line))
+	{
+		if (line.find("#shader") != std::string::npos)
+		{
+			if (line.find("vertex") != std::string::npos)
+				type = ShaderType::VERTEX;
+			else if (line.find("fragment") != std::string::npos)
+				type = ShaderType::FRAGMENT;
+			else
+				;
+		}
+		else
+			oss[(int)type] << line << '\n';
+	}
+	return {oss[0].str(), oss[1].str()};
+}
+
+static unsigned int		compileShader(unsigned int type, const std::string &source)
 {
 	unsigned int	id {glCreateShader(type)};
 	const char		*src {source.c_str()};
@@ -24,11 +57,11 @@ static unsigned int		CompileShader(unsigned int type, const std::string &source)
 	return id;
 }
 
-static unsigned int		CreateShader(const std::string &vertexShader, const std::string &fragmentShader)
+static unsigned int		createShader(const std::string &vertexShader, const std::string &fragmentShader)
 {
 	unsigned int	program {glCreateProgram()};
-	unsigned int	vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int	fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+	unsigned int	vs = compileShader(GL_VERTEX_SHADER, vertexShader);
+	unsigned int	fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
@@ -88,25 +121,8 @@ int	main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 
-	std::string		vertexShader = R"glsl(
-		#version 330 core
-		layout(location = 0) in vec4 position;
-		void main()
-		{
-			gl_Position = position;
-		}
-	)glsl";
-
-	std::string		fragmentShader = R"glsl(
-		#version 330 core
-		layout(location = 0) out vec4 color;
-		void main()
-		{
-			color = vec4(1.0, 0.0, 0.0, 1.0);
-		}
-	)glsl";
-
-	unsigned int	shader {CreateShader(vertexShader, fragmentShader)};
+	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
+	unsigned int	shader {createShader(source.vertexSource, source.fragmentSource)};
 	glUseProgram(shader);
 
 	/* Loop until the user closes the window */
@@ -125,7 +141,7 @@ int	main()
 		glfwPollEvents();
 	}
 
-	glDeleteProgram(shader);
+	// glDeleteProgram(shader);
 	glfwTerminate();
 
 	return 0;

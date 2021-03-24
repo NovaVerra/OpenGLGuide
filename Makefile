@@ -1,33 +1,44 @@
 # NAME OF EXECUTABLE
-NAME = code
+NAME = wireframe
 
 # COMPILER
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -g -std=c++17 -fsanitize=address -g
 
-# DIRECTORIES
-SRCDIR = ./srcs/
-OBJDIR = ./objs/
-INCDIR = ./includes/
+# DIRECTORIES FOR BASE PROJECT
+SRC_DIR = ./srcs/
+OBJ_DIR = ./objs/
+INC_DIR = ./includes/
+
+# GLFW
+GLFW_DIR = $(shell brew --prefix glfw)
+GLFW_INC = $(GLFW_DIR)/include/
+GLFW_LINK = -L $(GLFW_DIR)/lib/ -lglfw
+
+# HEADER (includes all INC)
+HEADER = -I $(INC_DIR) -I $(GLFW_INC)
 
 # SRCS & OBJS
 SRCS = main.cpp \
 		class.cpp
-OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
+OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 
+# INSTRUCTIONS
 all: objs $(NAME)
 
 objs:
-	mkdir -p $(OBJDIR)
+	mkdir -p $(OBJ_DIR)
 
-$(OBJDIR)%.o:$(SRCDIR)%.cpp
-	$(CC) $(CFLAGS) -I $(INCDIR) -o $@ -c $<
+# .cpp to .o
+$(OBJ_DIR)%.o:$(SRC_DIR)%.cpp
+	$(CC) $(CFLAGS) $(HEADER) -o $@ -c $<
 
+# .o to ./wireframe
 $(NAME):$(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(GLFW_LINK) $(OBJS)
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)

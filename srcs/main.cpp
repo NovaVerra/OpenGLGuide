@@ -1,4 +1,4 @@
-#include "../includes/wireframe_renderer/header.h"
+#include "../includes/opengl_guide/header.h"
 
 static unsigned int		CompileShader(unsigned int type, const std::string &source)
 {

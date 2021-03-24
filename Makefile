@@ -13,7 +13,7 @@ INC_DIR = ./includes/
 # GLFW
 GLFW_DIR = $(shell brew --prefix glfw)
 GLFW_INC = $(GLFW_DIR)/include/
-GLFW_LINK = -L $(GLFW_DIR)/lib/ -lglfw
+GLFW_LINK = -L $(GLFW_DIR)/lib/ -lglfw -framework OpenGL
 
 # HEADER (includes all INC)
 HEADER = -I $(INC_DIR) -I $(GLFW_INC)

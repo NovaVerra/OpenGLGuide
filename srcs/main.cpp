@@ -104,35 +104,42 @@ int	main()
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	float positions []
+	float			positions []
 	{
 		-0.5f, -0.5f,
 		0.5f, -0.5f,
 		0.5f, 0.5f,
-
-		0.5f, 0.5f,
-		-0.5f, 0.5f,
-		-0.5f,-0.5f
+		-0.5f, 0.5f
 	};
 
-	unsigned int buffer;
+	unsigned int	indices []
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
 
-	
 	/*
-	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
+	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE. COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
 	*/
-	GLuint vertexArrayID;
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
+	/* Gave OpenGL the buffer/data for the triangle */
+	unsigned int va_id;
+	glGenVertexArrays(1, &va_id);
+	glBindVertexArray(va_id);
 
-	/* Gave OpenGL the buffer/data */
+	unsigned int	buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), positions, GL_STATIC_DRAW);
 	
 	/* Gave OpenGL Vertex Attribute Layout */
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
+	/* Gave OpenGL the buffer/data for the triangle */
+	unsigned int ibo;
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
 	unsigned int	shader {createShader(source.vertexSource, source.fragmentSource)};
@@ -145,7 +152,7 @@ int	main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// This by itself does not render - non shaders yet
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,  nullptr);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
@@ -154,7 +161,7 @@ int	main()
 		glfwPollEvents();
 	}
 
-	// glDeleteProgram(shader);
+	glDeleteProgram(shader);
 	glfwTerminate();
 
 	return 0;

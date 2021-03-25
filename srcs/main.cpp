@@ -104,16 +104,23 @@ int	main()
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	float positions [6]
+	float positions []
 	{
 		-0.5f, -0.5f,
-		0.0f, 0.5f,
-		0.5f, -0.5f
+		0.5f, -0.5f,
+		0.5f, 0.5f,
+
+		0.5f, 0.5f,
+		-0.5f, 0.5f,
+		-0.5f,-0.5f
 	};
 
 	unsigned int buffer;
 
-	/* Needs to be added or it'll be empty */
+	
+	/*
+	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
+	*/
 	GLuint vertexArrayID;
 	glGenVertexArrays(1, &vertexArrayID);
 	glBindVertexArray(vertexArrayID);
@@ -121,7 +128,7 @@ int	main()
 	/* Gave OpenGL the buffer/data */
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 *sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 	
 	/* Gave OpenGL Vertex Attribute Layout */
 	glEnableVertexAttribArray(0);
@@ -138,7 +145,7 @@ int	main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// This by itself does not render - non shaders yet
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

@@ -111,8 +111,14 @@ int	main()
 		0.5f, -0.5f
 	};
 
-	/* Gave OpenGL the buffer/data */
 	unsigned int buffer;
+
+	/* Needs to be added or it'll be empty */
+	GLuint vertexArrayID;
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+
+	/* Gave OpenGL the buffer/data */
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, 6 *sizeof(float), positions, GL_STATIC_DRAW);

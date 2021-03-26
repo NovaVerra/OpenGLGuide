@@ -10,7 +10,7 @@ static bool			glLogCall(const char *function, const char *file, int line)
 	while (GLenum error = glGetError())
 	{
 		std::cerr << "[OpenGL Error] (" << error << "): ";
-		std::cerr << function << " " << file << " " << line << std::endl;
+		std::cerr << function << " IN " << file << " ON LINE " << line << std::endl;
 		return false;
 	}
 	return true;
@@ -168,7 +168,7 @@ int	main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// This by itself does not render - non shaders yet
-		glCall(glDrawElements(GL_TRIANGLES, 6, GL_INT,  nullptr));
+		glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

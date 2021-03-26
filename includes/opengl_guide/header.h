@@ -17,8 +17,10 @@ struct	ShaderSource
 	std::string	fragmentSource {};
 };
 
-ShaderSource			retrieveShader(const std::string &file_path);
-static unsigned int		compileShader(unsigned int type, const std::string &source);
-static unsigned int		createShader(const std::string &vertexShader, const std::string &fragmentShader);
+static void			glClearError();
+static void			glCheckError();
+ShaderSource		retrieveShader(const std::string &file_path);
+static unsigned int	compileShader(unsigned int type, const std::string &source);
+static unsigned int	createShader(const std::string &vertexShader, const std::string &fragmentShader);
 
 #endif

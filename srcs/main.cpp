@@ -1,6 +1,17 @@
 #include "../includes/opengl_guide/header.h"
 
-ShaderSource			retrieveShader(const std::string &file_path)
+static void			glClearError()
+{
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static void			glCheckError()
+{
+	while (GLenum error = glGetError())
+		std::cerr << "[OpenGL Error] (" << error << ")" << std::endl;
+}
+
+ShaderSource		retrieveShader(const std::string &file_path)
 {
 	std::ifstream		shaders {file_path};
 	std::ostringstream	oss[2];
@@ -33,7 +44,7 @@ ShaderSource			retrieveShader(const std::string &file_path)
 	return {oss[0].str(), oss[1].str()};
 }
 
-static unsigned int		compileShader(unsigned int type, const std::string &source)
+static unsigned int	compileShader(unsigned int type, const std::string &source)
 {
 	unsigned int	id {glCreateShader(type)};
 	const char		*src {source.c_str()};
@@ -57,7 +68,7 @@ static unsigned int		compileShader(unsigned int type, const std::string &source)
 	return id;
 }
 
-static unsigned int		createShader(const std::string &vertexShader, const std::string &fragmentShader)
+static unsigned int	createShader(const std::string &vertexShader, const std::string &fragmentShader)
 {
 	unsigned int	program {glCreateProgram()};
 	unsigned int	vs = compileShader(GL_VERTEX_SHADER, vertexShader);
@@ -121,11 +132,11 @@ int	main()
 	/*
 	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE. COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
 	*/
-	/* Gave OpenGL the buffer/data for the triangle */
 	unsigned int va_id;
 	glGenVertexArrays(1, &va_id);
 	glBindVertexArray(va_id);
 
+	/* Gave OpenGL the buffer/data for the triangle */
 	unsigned int	buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -151,8 +162,10 @@ int	main()
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glClearError();
 		// This by itself does not render - non shaders yet
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,  nullptr);
+		glDrawElements(GL_TRIANGLES, 6, GL_INT,  nullptr);
+		glCheckError();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

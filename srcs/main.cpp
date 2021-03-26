@@ -5,10 +5,15 @@ static void			glClearError()
 	while (glGetError() != GL_NO_ERROR);
 }
 
-static void			glCheckError()
+static bool			glLogCall(const char *function, const char *file, int line)
 {
 	while (GLenum error = glGetError())
-		std::cerr << "[OpenGL Error] (" << error << ")" << std::endl;
+	{
+		std::cerr << "[OpenGL Error] (" << error << "): ";
+		std::cerr << function << " " << file << " " << line << std::endl;
+		return false;
+	}
+	return true;
 }
 
 ShaderSource		retrieveShader(const std::string &file_path)
@@ -162,10 +167,8 @@ int	main()
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glClearError();
 		// This by itself does not render - non shaders yet
-		glDrawElements(GL_TRIANGLES, 6, GL_INT,  nullptr);
-		glCheckError();
+		glCall(glDrawElements(GL_TRIANGLES, 6, GL_INT,  nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

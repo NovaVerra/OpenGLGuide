@@ -137,9 +137,9 @@ int	main()
 	/*
 	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE. COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
 	*/
-	unsigned int va_id;
-	glGenVertexArrays(1, &va_id);
-	glBindVertexArray(va_id);
+	unsigned int vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 
 	/* Gave OpenGL the buffer/data for the triangle */
 	unsigned int	buffer;
@@ -149,7 +149,7 @@ int	main()
 	
 	/* Gave OpenGL Vertex Attribute Layout */
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);	// this line links BUFFER with VAO
 
 	/* Gave OpenGL the buffer/data for the triangle */
 	unsigned int ibo;
@@ -166,6 +166,11 @@ int	main()
 	ASSERT(location != -1)
 	glCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
 
+	glUseProgram(0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	float	r = 0.0f;
 	float	increment = 0.05f;
 	/* Loop until the user closes the window */
@@ -173,6 +178,11 @@ int	main()
 	{
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shader);
+
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 		// This by itself does not render - non shaders yet
 		glCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));

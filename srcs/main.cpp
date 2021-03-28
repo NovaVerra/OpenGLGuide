@@ -129,14 +129,14 @@ int	main()
 	glBindVertexArray(vao);
 
 	/* Gave OpenGL the buffer/data for the triangle */
-	VertexBuffer	vb {positions, 8 * sizeof(float)};
+	VertexBuffer	*vb = new VertexBuffer {positions, 8 * sizeof(float)};
 	
 	/* Gave OpenGL Vertex Attribute Layout */
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);	// this line links BUFFER with VAO
 
 	/* Gave OpenGL the buffer/data for the triangle */
-	IndexBuffer		ib {indices, 6};
+	IndexBuffer		*ib = new IndexBuffer {indices, 6};
 
 	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
 	unsigned int	shader {createShader(source.vertexSource, source.fragmentSource)};
@@ -163,7 +163,7 @@ int	main()
 		glUseProgram(shader);
 
 		glBindVertexArray(vao);
-		ib.bind();
+		ib->bind();
 
 		// This by itself does not render - non shaders yet
 		glCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
@@ -184,6 +184,8 @@ int	main()
 	}
 
 	glDeleteProgram(shader);
+	delete vb;
+	delete ib;
 	glfwTerminate();
 
 	return 0;

@@ -24,7 +24,10 @@ GLEW_LINK = -L $(GLFW_DIR)/lib/ -lGLEW
 HEADER = -I $(INC_DIR) -I $(GLFW_INC) -I $(GLEW_INC)
 
 # SRCS & OBJS
-SRCS = main.cpp
+SRCS = main.cpp \
+		Renderer.cpp \
+		VertexBuffer.cpp \
+		IndexBuffer.cpp
 
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 

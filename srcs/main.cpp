@@ -1,20 +1,7 @@
 #include "../includes/opengl_guide/header.h"
-
-static void			glClearError()
-{
-	while (glGetError() != GL_NO_ERROR);
-}
-
-static bool			glLogCall(const char *function, const char *file, int line)
-{
-	while (GLenum error = glGetError())
-	{
-		std::cerr << "[OpenGL Error] (" << error << "): ";
-		std::cerr << function << " IN " << file << " ON LINE " << line << std::endl;
-		return false;
-	}
-	return true;
-}
+#include "../includes/opengl_guide/Renderer.h"
+#include "../includes/opengl_guide/VertexBuffer.h"
+#include "../includes/opengl_guide/IndexBuffer.h"
 
 ShaderSource		retrieveShader(const std::string &file_path)
 {
@@ -142,20 +129,14 @@ int	main()
 	glBindVertexArray(vao);
 
 	/* Gave OpenGL the buffer/data for the triangle */
-	unsigned int	buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), positions, GL_STATIC_DRAW);
+	VertexBuffer	vb {positions, 8 * sizeof(float)};
 	
 	/* Gave OpenGL Vertex Attribute Layout */
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);	// this line links BUFFER with VAO
 
 	/* Gave OpenGL the buffer/data for the triangle */
-	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	IndexBuffer		ib {indices, 6};
 
 	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
 	unsigned int	shader {createShader(source.vertexSource, source.fragmentSource)};
@@ -182,7 +163,7 @@ int	main()
 		glUseProgram(shader);
 
 		glBindVertexArray(vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		ib.bind();
 
 		// This by itself does not render - non shaders yet
 		glCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));

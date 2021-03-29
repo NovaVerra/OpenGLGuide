@@ -1,7 +1,7 @@
 #ifndef _VERTEXBUFFER_H_
 #define _VERTEXBUFFER_H_
 
-class VertexBuffer
+class	VertexBuffer
 {
 private:
 	unsigned int	m_renderer_id;

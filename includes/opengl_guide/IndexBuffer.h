@@ -1,7 +1,7 @@
 #ifndef _INDEXBUFFER_H_
 #define _INDEXBUFFER_H_
 
-class IndexBuffer
+class	IndexBuffer
 {
 private:
 	unsigned int	m_renderer_id;

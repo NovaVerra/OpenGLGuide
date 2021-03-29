@@ -2,6 +2,7 @@
 #include "../includes/opengl_guide/Renderer.h"
 #include "../includes/opengl_guide/VertexBuffer.h"
 #include "../includes/opengl_guide/IndexBuffer.h"
+#include "../includes/opengl_guide/VertexArray.h"
 
 ShaderSource		retrieveShader(const std::string &file_path)
 {
@@ -128,14 +129,12 @@ int	main()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	/* Gave OpenGL the buffer/data for the triangle */
-	VertexBuffer	*vb = new VertexBuffer {positions, 8 * sizeof(float)};
-	
-	/* Gave OpenGL Vertex Attribute Layout */
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);	// this line links BUFFER with VAO
+	VertexArray			*va = new VertexArray {};
+	VertexBuffer		*vb = new VertexBuffer {positions, 8 * sizeof(float)};
+	VertexBufferLayout	*layout = new VertexBufferLayout {};
+	layout->push<float>(2);
+	va->init_buffer(*vb, *layout);
 
-	/* Gave OpenGL the buffer/data for the triangle */
 	IndexBuffer		*ib = new IndexBuffer {indices, 6};
 
 	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
@@ -162,12 +161,14 @@ int	main()
 
 		glUseProgram(shader);
 
-		glBindVertexArray(vao);
-		ib->bind();
-
 		// This by itself does not render - non shaders yet
 		glCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
+		
+		va->bind();
+		ib->bind();
+
 		glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		if (r > 1.0f)
 			increment  = -0.05f;
@@ -186,6 +187,8 @@ int	main()
 	glDeleteProgram(shader);
 	delete vb;
 	delete ib;
+	delete vb;
+	delete layout;
 	glfwTerminate();
 
 	return 0;

@@ -3,7 +3,7 @@ NAME = opengl
 
 # COMPILER
 CC = g++
-CFLAGS = -Wall -Wextra -Werror -g -std=c++17 -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -Wno-int-to-void-pointer-cast -g -std=c++17 -fsanitize=address -g
 
 # DIRECTORIES FOR BASE PROJECT
 SRC_DIR = ./srcs/
@@ -27,7 +27,9 @@ HEADER = -I $(INC_DIR) -I $(GLFW_INC) -I $(GLEW_INC)
 SRCS = main.cpp \
 		Renderer.cpp \
 		VertexBuffer.cpp \
-		IndexBuffer.cpp
+		IndexBuffer.cpp \
+		VertexBufferLayout.cpp \
+		VertexArray.cpp
 
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 

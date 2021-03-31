@@ -187,7 +187,6 @@ int	main()
 	glDeleteProgram(shader);
 	delete vb;
 	delete ib;
-	delete vb;
 	delete layout;
 	glfwTerminate();
 

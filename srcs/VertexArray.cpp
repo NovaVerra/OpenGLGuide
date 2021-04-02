@@ -11,7 +11,7 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_renderer_id);
 }
 
-void	VertexArray::init_buffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
+void	VertexArray::add_buffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
 {
 	bind();
 	vb.bind();

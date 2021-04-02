@@ -133,7 +133,7 @@ int	main()
 	VertexBuffer		*vb = new VertexBuffer {positions, 8 * sizeof(float)};
 	VertexBufferLayout	*layout = new VertexBufferLayout {};
 	layout->push<float>(2);
-	va->init_buffer(*vb, *layout);
+	va->add_buffer(*vb, *layout);
 
 	IndexBuffer		*ib = new IndexBuffer {indices, 6};
 

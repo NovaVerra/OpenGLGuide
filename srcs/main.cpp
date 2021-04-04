@@ -122,13 +122,6 @@ int	main()
 		2, 3, 0
 	};
 
-	/*
-	It is likely that without the window hints it was defaulting to the COMPAT profile of opengl rather than CORE. COMPAT has a default VAO but in the CORE profile a VAO is required to be explicitly created and bound if you bound the VAO after calling glVertexAttribPointer then that would cause an error because the function is a VAO state changer and requires a VAO to bound
-	*/
-	unsigned int vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
 	VertexArray			*va = new VertexArray {};
 	VertexBuffer		*vb = new VertexBuffer {positions, 8 * sizeof(float)};
 	VertexBufferLayout	*layout = new VertexBufferLayout {};
@@ -146,8 +139,8 @@ int	main()
 	ASSERT(location != -1)
 	glCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
 
+	va->unbind();
 	glUseProgram(0);
-	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

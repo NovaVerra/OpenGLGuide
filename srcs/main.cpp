@@ -65,23 +65,20 @@ int	main()
 	ib->unbind();
 	shader->unbind();
 
+	Renderer 		*renderer = new Renderer {};
+
 	float	r = 0.0f;
 	float	increment = 0.05f;
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+		renderer->clear();
 
 		shader->bind();
-
-		// This by itself does not render - non shaders yet
 		shader->set_uniform_4f("u_color", r, 0.3f, 0.8f, 1.0f);	
-		va->bind();
-		ib->bind();
 
-		glCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		renderer->draw(*va, *ib, *shader);
 
 		if (r > 1.0f)
 			increment  = -0.05f;

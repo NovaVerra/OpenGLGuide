@@ -16,7 +16,7 @@ private:
 	std::string								file_path;
 	unsigned int							m_renderer_id;
 	std::unordered_map<std::string, int>	m_uniform_location_cache;
-	// caching for uniform
+
 public:
 	Shader(const std::string &file_path);
 	~Shader();
@@ -24,7 +24,6 @@ public:
 	void	bind() const;
 	void	unbind() const;
 
-	// Set uniforms
 	void	set_uniform_4f(const std::string &name, float f0, float f1, float f2, float f3);
 
 private:

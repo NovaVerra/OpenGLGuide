@@ -18,6 +18,16 @@ Shader::~Shader()
 	glDeleteProgram(m_renderer_id);
 }
 
+void			Shader::bind() const
+{
+	glUseProgram(m_renderer_id);
+}
+
+void			Shader::unbind() const
+{
+	glUseProgram(0);
+}
+
 ShaderSource	Shader::retrieve_shader(const std::string &file_path)
 {
 	std::ifstream		shaders {file_path};
@@ -93,22 +103,12 @@ unsigned int	Shader::create_shader(const std::string &vertex_shader, const std::
 	return program;
 }
 
-void			Shader::bind() const
-{
-	glUseProgram(m_renderer_id);
-}
-
-void			Shader::unbind() const
-{
-	glUseProgram(0);
-}
-
 void			Shader::set_uniform_4f(const std::string &name, float f0, float f1, float f2, float f3)
 {
 	glUniform4f(get_uniform_location(name), f0, f1, f2, f3);
 }
 
-int	Shader::get_uniform_location(const std::string &name)
+int				Shader::get_uniform_location(const std::string &name)
 {
 	if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
 		return m_uniform_location_cache[name];

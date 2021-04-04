@@ -1,5 +1,4 @@
 #include "../includes/opengl_guide/Renderer.h"
-
 #include <iostream>
 
 void	glClearError()
@@ -16,4 +15,17 @@ bool	glLogCall(const char *function, const char *file, int line)
 		return false;
 	}
 	return true;
+}
+
+void	Renderer::draw(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const
+{
+	shader.bind();
+	va.bind();
+	ib.bind();
+	glCall(glDrawElements(GL_TRIANGLES, ib.get_count(), GL_UNSIGNED_INT, nullptr));
+}
+
+void	Renderer::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
 }

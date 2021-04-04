@@ -3,81 +3,7 @@
 #include "../includes/opengl_guide/VertexBuffer.h"
 #include "../includes/opengl_guide/IndexBuffer.h"
 #include "../includes/opengl_guide/VertexArray.h"
-
-ShaderSource		retrieveShader(const std::string &file_path)
-{
-	std::ifstream		shaders {file_path};
-	std::ostringstream	oss[2];
-	std::string			line {};
-
-	if (!shaders)
-		std::cerr << "Error opening file" << std::endl;
-
-	enum class ShaderType
-	{
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	};
-
-	ShaderType type = ShaderType::NONE;
-
-	while (std::getline(shaders, line))
-	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != std::string::npos)
-				type = ShaderType::FRAGMENT;
-			else
-				;
-		}
-		else
-			oss[(int)type] << line << '\n';
-	}
-	return {oss[0].str(), oss[1].str()};
-}
-
-static unsigned int	compileShader(unsigned int type, const std::string &source)
-{
-	unsigned int	id {glCreateShader(type)};
-	const char		*src {source.c_str()};
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	int				result;	
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE)
-	{
-		int		length {};
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char	*message = (char *)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-		std::cerr << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") <<" shader" << std::endl;
-		std::cerr << message << std::endl;
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
-}
-
-static unsigned int	createShader(const std::string &vertexShader, const std::string &fragmentShader)
-{
-	unsigned int	program {glCreateProgram()};
-	unsigned int	vs = compileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int	fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
+#include "../includes/opengl_guide/Shader.h"
 
 int	main()
 {
@@ -130,19 +56,14 @@ int	main()
 
 	IndexBuffer		*ib = new IndexBuffer {indices, 6};
 
-	ShaderSource	source {retrieveShader("./shaders/basic.shader")};
-	unsigned int	shader {createShader(source.vertexSource, source.fragmentSource)};
-	glUseProgram(shader);
-
-	/* in order to send uniform data, a shader HAS to be bound */
-	glCall(int	location = glGetUniformLocation(shader, "u_color"));
-	ASSERT(location != -1)
-	glCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
+	Shader			*shader = new Shader {"./shaders/basic.shader"};
+	shader->bind();
+	shader->set_uniform_4f("u_color", 0.8f, 0.3f, 0.8f, 1.0f);
 
 	va->unbind();
-	glUseProgram(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	vb->unbind();
+	ib->unbind();
+	shader->unbind();
 
 	float	r = 0.0f;
 	float	increment = 0.05f;
@@ -152,11 +73,10 @@ int	main()
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shader);
+		shader->bind();
 
 		// This by itself does not render - non shaders yet
-		glCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
-		
+		shader->set_uniform_4f("u_color", r, 0.3f, 0.8f, 1.0f);	
 		va->bind();
 		ib->bind();
 
@@ -177,10 +97,10 @@ int	main()
 		glfwPollEvents();
 	}
 
-	glDeleteProgram(shader);
 	delete vb;
 	delete ib;
 	delete layout;
+	delete shader;
 	glfwTerminate();
 
 	return 0;

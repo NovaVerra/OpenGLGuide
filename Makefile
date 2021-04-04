@@ -29,7 +29,8 @@ SRCS = main.cpp \
 		VertexBuffer.cpp \
 		IndexBuffer.cpp \
 		VertexBufferLayout.cpp \
-		VertexArray.cpp
+		VertexArray.cpp \
+		Shader.cpp
 
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 

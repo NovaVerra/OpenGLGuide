@@ -24,6 +24,7 @@ public:
 	void	bind() const;
 	void	unbind() const;
 
+	void	set_uniform_1i(const std::string &name, int value);
 	void	set_uniform_4f(const std::string &name, float f0, float f1, float f2, float f3);
 
 private:

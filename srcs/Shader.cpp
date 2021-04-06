@@ -103,6 +103,11 @@ unsigned int	Shader::create_shader(const std::string &vertex_shader, const std::
 	return program;
 }
 
+void			Shader::set_uniform_1i(const std::string &name, int value)
+{
+	glUniform1i(get_uniform_location(name), value);
+}
+
 void			Shader::set_uniform_4f(const std::string &name, float f0, float f1, float f2, float f3)
 {
 	glUniform4f(get_uniform_location(name), f0, f1, f2, f3);

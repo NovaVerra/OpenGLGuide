@@ -4,6 +4,7 @@
 #include "../includes/opengl_guide/IndexBuffer.h"
 #include "../includes/opengl_guide/VertexArray.h"
 #include "../includes/opengl_guide/Shader.h"
+#include "../includes/opengl_guide/Texture.h"
 
 int	main()
 {
@@ -36,10 +37,10 @@ int	main()
 
 	float			positions []
 	{
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f,
-		-0.5f, 0.5f
+		-0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.0f, 1.0f
 	};
 
 	unsigned int	indices []
@@ -49,16 +50,21 @@ int	main()
 	};
 
 	VertexArray			*va = new VertexArray {};
-	VertexBuffer		*vb = new VertexBuffer {positions, 8 * sizeof(float)};
+	VertexBuffer		*vb = new VertexBuffer {positions, 4 * 4 * sizeof(float)};
 	VertexBufferLayout	*layout = new VertexBufferLayout {};
+	IndexBuffer			*ib = new IndexBuffer {indices, 6};
+	Shader				*shader = new Shader {"./shaders/basic.shader"};
+	Texture				*texture = new Texture {"./textures/ZeroTwo.png"};
+
+	layout->push<float>(2);
 	layout->push<float>(2);
 	va->add_buffer(*vb, *layout);
 
-	IndexBuffer		*ib = new IndexBuffer {indices, 6};
-
-	Shader			*shader = new Shader {"./shaders/basic.shader"};
 	shader->bind();
 	shader->set_uniform_4f("u_color", 0.8f, 0.3f, 0.8f, 1.0f);
+
+	texture->bind();
+	shader->set_uniform_1i("u_texture", 0);
 
 	va->unbind();
 	vb->unbind();
@@ -98,6 +104,7 @@ int	main()
 	delete ib;
 	delete layout;
 	delete shader;
+	delete texture;
 	glfwTerminate();
 
 	return 0;

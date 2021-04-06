@@ -49,6 +49,9 @@ int	main()
 		2, 3, 0
 	};
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	VertexArray			*va = new VertexArray {};
 	VertexBuffer		*vb = new VertexBuffer {positions, 4 * 4 * sizeof(float)};
 	VertexBufferLayout	*layout = new VertexBufferLayout {};

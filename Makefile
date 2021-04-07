@@ -32,7 +32,13 @@ SRCS = main.cpp \
 		VertexArray.cpp \
 		Shader.cpp \
 		Texture.cpp \
-		stb_image.cpp
+		stb_image.cpp \
+		imgui_demo.cpp \
+		imgui_draw.cpp \
+		imgui_impl_glfw_gl3.cpp \
+		imgui_tables.cpp \
+		imgui_widgets.cpp \
+		imgui.cpp
 
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 

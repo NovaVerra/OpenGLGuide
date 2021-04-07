@@ -32,7 +32,7 @@ SRCS = main.cpp \
 		VertexArray.cpp \
 		Shader.cpp \
 		Texture.cpp \
-		VStbImage.cpp
+		stb_image.cpp
 
 OBJS = $(addprefix $(OBJ_DIR),$(SRCS:.cpp=.o))
 

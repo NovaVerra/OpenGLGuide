@@ -56,8 +56,8 @@ int	main()
 	VertexBuffer		*vb = new VertexBuffer {positions, 4 * 4 * sizeof(float)};
 	VertexBufferLayout	*layout = new VertexBufferLayout {};
 	IndexBuffer			*ib = new IndexBuffer {indices, 6};
-	Shader				*shader = new Shader {"./shaders/basic.shader"};
-	Texture				*texture = new Texture {"./textures/ZeroTwo.png"};
+	Shader				*shader = new Shader {"./res/shaders/basic.shader"};
+	Texture				*texture = new Texture {"./res/textures/ZeroTwo.png"};
 
 	layout->push<float>(2);
 	layout->push<float>(2);

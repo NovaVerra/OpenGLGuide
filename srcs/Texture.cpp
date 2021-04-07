@@ -1,5 +1,5 @@
 #include "../includes/opengl_guide/Texture.h"
-#include "../includes/opengl_guide/VStbImage.h"
+#include "../includes/opengl_guide/vendor/stb_image.h"
 
 Texture::Texture(const std::string &file_path)
 : m_renderer_id {0}, m_file_path {file_path}, m_local_buffer {nullptr}, m_width {0}, m_height {0}, m_bpp {0}

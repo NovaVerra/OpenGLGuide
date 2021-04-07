@@ -22,7 +22,7 @@ int	main()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -39,10 +39,10 @@ int	main()
 
 	float			positions []
 	{
-		-0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.0f, 1.0f
+		100.0f, 100.0f, 0.0f, 0.0f,
+		200.0f, 100.0f, 1.0f, 0.0f,
+		200.0f, 200.0f, 1.0f, 1.0f,
+		100.0f, 200.0f, 0.0f, 1.0f
 	};
 
 	unsigned int	indices []
@@ -62,15 +62,17 @@ int	main()
 	Texture				*texture = new Texture {"./res/textures/ZeroTwo.png"};
 	Renderer 			*renderer = new Renderer {};
 
-	glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-
+	glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+	glm::mat4 mvp = proj * view * model;
 	layout->push<float>(2);
 	layout->push<float>(2);
 	va->add_buffer(*vb, *layout);
 
 	shader->bind();
 	shader->set_uniform_4f("u_color", 0.8f, 0.3f, 0.8f, 1.0f);
-	shader->set_uniform_matrix_4f("u_mvp", proj);
+	shader->set_uniform_matrix_4f("u_mvp", mvp);
 
 	texture->bind();
 	shader->set_uniform_1i("u_texture", 0);
@@ -79,7 +81,6 @@ int	main()
 	vb->unbind();
 	ib->unbind();
 	shader->unbind();
-
 
 	float	r = 0.0f;
 	float	increment = 0.05f;

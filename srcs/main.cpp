@@ -5,6 +5,8 @@
 #include "../includes/opengl_guide/VertexArray.h"
 #include "../includes/opengl_guide/Shader.h"
 #include "../includes/opengl_guide/Texture.h"
+#include "../includes/opengl_guide/vendor/glm/glm.hpp"
+#include "../includes/opengl_guide/vendor/glm/gtc/matrix_transform.hpp"
 
 int	main()
 {
@@ -58,6 +60,9 @@ int	main()
 	IndexBuffer			*ib = new IndexBuffer {indices, 6};
 	Shader				*shader = new Shader {"./res/shaders/basic.shader"};
 	Texture				*texture = new Texture {"./res/textures/ZeroTwo.png"};
+	Renderer 			*renderer = new Renderer {};
+
+	glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
 	layout->push<float>(2);
 	layout->push<float>(2);
@@ -65,6 +70,7 @@ int	main()
 
 	shader->bind();
 	shader->set_uniform_4f("u_color", 0.8f, 0.3f, 0.8f, 1.0f);
+	shader->set_uniform_matrix_4f("u_mvp", proj);
 
 	texture->bind();
 	shader->set_uniform_1i("u_texture", 0);
@@ -74,7 +80,6 @@ int	main()
 	ib->unbind();
 	shader->unbind();
 
-	Renderer 		*renderer = new Renderer {};
 
 	float	r = 0.0f;
 	float	increment = 0.05f;
